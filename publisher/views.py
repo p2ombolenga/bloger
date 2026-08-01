@@ -76,6 +76,9 @@ class CommentListCreateAPIView(ListCreateAPIView):
         return serializer.save(user=self.request.user, post=post_instance)
     
 class CommentRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        post_id = self.kwargs.get('post_id')
+        return Comment.objects.filter(post_id=post_id)
